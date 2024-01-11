@@ -52,14 +52,9 @@ const Auth = {
                 res.send('Usuario ya existe!')
             } else {
                 const salt = await bcrypt.genSalt();
-                const hashed = await bcrypt.hash(body.password, salt);
-                const user = await User.create({ email: body.email, password: hashed, salt });
-
-                const signed = signToken(user._id);
-                res.send(signed);
+                const hashed = await bcrypt.hash({ body.password, salt })
             }
         } catch (error) {
-            res.status(500).send(error.massage)
 
         }
     },

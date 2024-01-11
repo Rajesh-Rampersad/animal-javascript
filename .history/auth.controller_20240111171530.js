@@ -44,25 +44,7 @@ const Auth = {
 
         }
     },
-    register: async (req, res) => {
-        const { body } = req
-        try {
-            const isUser = await User.findOne({ email: body.email });
-            if (isUser) {
-                res.send('Usuario ya existe!')
-            } else {
-                const salt = await bcrypt.genSalt();
-                const hashed = await bcrypt.hash(body.password, salt);
-                const user = await User.create({ email: body.email, password: hashed, salt });
-
-                const signed = signToken(user._id);
-                res.send(signed);
-            }
-        } catch (error) {
-            res.status(500).send(error.massage)
-
-        }
-    },
+    register: async (req, res) => { },
 }
 
 module.exports = { Auth, isAuthenticated }
