@@ -59,8 +59,113 @@ const addFormListener = () => {
 	}
 }
 
-window.onload = () => {
+const checkLogin = () =>
+	localStorage.getItem('jwt')
+
+const animalsPage = () => {
 	loadInitialTemplate()
 	addFormListener()
   getAnimals()
 }
+
+const loadRegisterTemplate = () => {
+	const template = `
+		<h1>Register</h1>
+		<form id="register-form">
+			<div>
+				<label>Correo electrónico</label>
+				<input name="email"  />
+			</div>
+			<div>
+				<label>Contraseña</label>
+				<input name="password"/>
+			</div>
+			<button type="submit">Enviar</button>
+		</form>
+		<a href="#" id="login">Iniciar sesión</a>
+		<div id="error"></div>
+	`
+	const body = document.getElementsByTagName('body')[0]
+	body.innerHTML = template
+}
+const gotoRegisterListener = () => {
+	const gotoRegister = document.getElementById('register')
+	gotoRegister.onclick = (e) => {
+		e.preventDefault()
+		registerPage()
+	}
+}
+const addRegisterListener = ()  => {}
+const gotoLoginListener = () =>{}
+
+const registerPage = () => {
+	console.log('pagina de registro');
+	loadRegisterTemplate()
+	addRegisterListener()
+  	gotoLoginListener()
+}
+const loginPage = () => {
+	loadLoginTemplate()
+	addLoginListener()
+	gotoRegisterListener()
+}
+
+
+
+
+const loadLoginTemplate = () => {
+	const template = `
+		<h1>Login</h1>
+		<form id="login-form">
+			<div>
+				<label>Correo electrónico</label>
+				<input name="email"  />
+			</div>
+			<div>
+				<label>Contraseña</label>
+				<input name="password"/>
+			</div>
+			<button type="submit">Enviar</button>
+		</form>
+		<a href="#" id="register">Registrarse</a>
+		<div id="error"></div>
+	`
+	const body = document.getElementsByTagName('body')[0]
+	body.innerHTML = template
+}
+
+const addLoginListener = () => {
+	const loginForm = document.getElementById("login-form");
+	loginForm.onsubmit = async (e) => {
+		e.preventDefault();
+		
+		// Cambia el nombre de la variable o del objeto FormData
+		const formDataObj = new FormData(loginForm);
+		
+		const data = Object.fromEntries(formDataObj.entries());
+
+		const response = await fetch('/login', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(data),
+		});
+		const responseData = await response.text();
+		if (response.status >= 300) {
+			const errorNode = document.getElementById('error');
+			errorNode.innerHTML = responseData;
+		} else {
+			console.log(responseData);
+		}
+	};
+};
+
+
+window.onload = () => {
+	const isLoggedIn = checkLogin()
+	if (isLoggedIn) {
+		 animalsPage()
+	} else
+	loginPage()
+}
+
+
