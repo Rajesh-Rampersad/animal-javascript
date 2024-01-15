@@ -4,7 +4,7 @@ const app = express()
 const Animal = require('./animal.controller')
 const { Auth, isAuthenticated } = require('./auth.controller');
 
-const port = 3000
+const port = 4000
 
 mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
 // mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
