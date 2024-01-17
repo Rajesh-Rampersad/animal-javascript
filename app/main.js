@@ -20,7 +20,7 @@ const loadInitialTemplate = () => {
 
 const getAnimals = async () => {
 	const response = await fetch('/animals', {
-		headers: {
+		headers:{
 			Authorization: localStorage.getItem('jwt')
 		}
 	})
@@ -55,8 +55,7 @@ const addFormListener = () => {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
-				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('jwt')
+				'Content-Type': 'application/json'
 			}
 		})
 		animalForm.reset()
@@ -64,8 +63,9 @@ const addFormListener = () => {
 	}
 }
 
-const checkLogin = () =>
-	localStorage.getItem('jwt')
+const checkLogin = () =>{
+	return localStorage.getItem('jwt')
+}
 
 const animalsPage = () => {
 	loadInitialTemplate()
@@ -94,7 +94,14 @@ const loadRegisterTemplate = () => {
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
-const addRegisterListener = () => {
+const gotoRegisterListener = () => {
+	const gotoRegister = document.getElementById('register')
+	gotoRegister.onclick = (e) => {
+		e.preventDefault()
+		registerPage()
+	}
+}
+const addRegisterListener = ()  => {
 	const registerForm = document.getElementById("register-form");
 	registerForm.onsubmit = async (e) => {
 		e.preventDefault();
@@ -106,7 +113,7 @@ const addRegisterListener = () => {
 
 		const response = await fetch('/register', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(data),
 		});
 		const responseData = await response.text();
@@ -114,13 +121,13 @@ const addRegisterListener = () => {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
-			localStorage.setItem('jwt', 'Bearer ${resposeData}')
+			localStorage.setItem('jwt', `Bearer ${responseData}`)
 			animalsPage()
 			console.log(responseData);
 		}
 	};
 }
-const gotoLoginListener = () => { }
+const gotoLoginListener = () =>{}
 
 const registerPage = () => {
 	console.log('pagina de registro');
@@ -133,8 +140,6 @@ const loginPage = () => {
 	addLoginListener()
 	gotoRegisterListener()
 }
-
-
 
 
 const loadLoginTemplate = () => {
@@ -157,14 +162,6 @@ const loadLoginTemplate = () => {
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
-const gotoRegisterListener = () => {
-	const gotoRegister = document.getElementById('register')
-	gotoRegister.onclick = (e) => {
-		e.preventDefault()
-		registerPage()
-	}
-}
-
 
 const addLoginListener = () => {
 	const loginForm = document.getElementById("login-form");
@@ -178,7 +175,7 @@ const addLoginListener = () => {
 
 		const response = await fetch('/login', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(data),
 		});
 		const responseData = await response.text();
@@ -186,6 +183,7 @@ const addLoginListener = () => {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
+		
 			console.log(responseData);
 		}
 	};

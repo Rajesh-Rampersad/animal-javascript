@@ -7,16 +7,6 @@ const { Auth, isAuthenticated } = require('./auth.controller');
 const port = 4000
 
 mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
-// mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
-//   .then(() => {
-//     console.log('Conexión a MongoDB exitosa');
-//     app.listen(port, () => {
-//       console.log(`Server running at http://localhost:${port}`);
-//     });
-//   })
-//   .catch(error => {
-//     console.error('Error al conectar a MongoDB:', error.message);
-//   });
 
 app.use(express.json())
 
