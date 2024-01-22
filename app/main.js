@@ -21,7 +21,7 @@ const loadInitialTemplate = () => {
 const getAnimals = async () => {
 	const response = await fetch('/animals', {
 		headers: {
-			'Authorization': localStorage.getItem('jwt')
+			Authorization: localStorage.getItem('jwt')
 		}
 	})
 	const animals = await response.json()
@@ -56,7 +56,7 @@ const addFormListener = () => {
 			body: JSON.stringify(data),
 			headers: {
 				'Content-Type': 'application/json',
-
+				Authorization: localStorage.getItem('jwt')
 			}
 		})
 		animalForm.reset()
@@ -64,7 +64,8 @@ const addFormListener = () => {
 	}
 }
 
-const checkLogin = () => { return localStorage.getItem('jwt') }
+const checkLogin = () =>
+	localStorage.getItem('jwt')
 
 const animalsPage = () => {
 	loadInitialTemplate()
@@ -93,8 +94,6 @@ const loadRegisterTemplate = () => {
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
-
-
 const addRegisterListener = () => {
 	const registerForm = document.getElementById("register-form");
 	registerForm.onsubmit = async (e) => {
@@ -107,6 +106,7 @@ const addRegisterListener = () => {
 
 		const response = await fetch('/register', {
 			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data),
 			headers: {
 				'Content-Type': 'application/json'
@@ -119,15 +119,13 @@ const addRegisterListener = () => {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
-			localStorage.setItem('jwt', 'Bearer ${responseData}')
+			localStorage.setItem('jwt', 'Bearer ${resposeData}')
 			animalsPage()
 			console.log(responseData);
 		}
 	};
 }
-const gotoLoginListener = () => {
-
-}
+const gotoLoginListener = () => { }
 
 const registerPage = () => {
 	console.log('pagina de registro');
@@ -140,8 +138,6 @@ const loginPage = () => {
 	addLoginListener()
 	gotoRegisterListener()
 }
-
-
 
 
 const loadLoginTemplate = () => {
@@ -173,7 +169,6 @@ const gotoRegisterListener = () => {
 }
 
 
-
 const addLoginListener = () => {
 	const loginForm = document.getElementById("login-form");
 	loginForm.onsubmit = async (e) => {
@@ -194,6 +189,7 @@ const addLoginListener = () => {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
+
 			console.log(responseData);
 		}
 	};
