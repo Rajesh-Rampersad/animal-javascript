@@ -75,16 +75,16 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { expressjwt: jwt } = require("express-jwt");
 const Jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt')
+// const expressJwt = require('express-jwt')
 // const { expressjwt: jwt } = require("express-jwt");
 const User = require('./user.model');
 const port = 3000;
 
-const validateJwt = expressJwt({ secret: "mi-secreto", algorithms: ['HS256'] });
+const validateJwt = jwt({ secret: "mi-secreto", algorithms: ['HS256'] });
 const signToken = _id => Jwt.sign({ _id }, "mi-secreto");
 const findAndAssignUser = async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.auth._id);
         if (!user) {
             return res.status(404).end();
         }
@@ -99,7 +99,7 @@ const findAndAssignUser = async (req, res, next) => {
 
 // const isAuthenticated = express.Router().use(validateJwt, findAndAssignUser);
 const isAuthenticated = express.Router();
-isAuthenticated.use(validateJwt, findAndAssingUser);
+isAuthenticated.use(validateJwt, findAndAssignUser);
 
 
 const Auth = {
@@ -112,7 +112,7 @@ const Auth = {
             } else {
                 const isMatch = await bcrypt.compare(body.password, user.password);
                 if (isMatch) {
-                    const signed = signToken(user._id)
+                    const signed = signToken(auth._id)
                     res.status(200).json({ token: signed })
                 } else {
                     res.status(401).send('Contraseña y/o usuario incorrecta')
@@ -138,7 +138,7 @@ const Auth = {
                 const hashed = await bcrypt.hash(body.password, salt);
                 const user = await User.create({ email: body.email, password: hashed, salt });
 
-                const signed = signToken(user._id)
+                const signed = signToken(auth._id)
                 res.send(signed)
             }
         } catch (error) {

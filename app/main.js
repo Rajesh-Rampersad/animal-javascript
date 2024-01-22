@@ -20,9 +20,7 @@ const loadInitialTemplate = () => {
 
 const getAnimals = async () => {
 	const response = await fetch('/animals', {
-		headers: {
-			Authorization: localStorage.getItem('jwt')
-		}
+
 	})
 	const animals = await response.json()
 	const template = animal => `
@@ -56,7 +54,7 @@ const addFormListener = () => {
 			body: JSON.stringify(data),
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('jwt')
+				// Authorization: localStorage.getItem('jwt')
 			}
 		})
 		animalForm.reset()
@@ -119,8 +117,8 @@ const addRegisterListener = () => {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
-			localStorage.setItem('jwt', 'Bearer ${resposeData}')
-			animalsPage()
+			// localStorage.setItem('jwt', `Bearer ${resposeData}`)
+			// animalsPage()
 			console.log(responseData);
 		}
 	};
