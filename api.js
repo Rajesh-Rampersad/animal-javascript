@@ -4,23 +4,31 @@ const app = express()
 const Animal = require('./animal.controller')
 const { Auth, isAuthenticated } = require('./auth.controller');
 
-const port = 4000
+const port = 3000
 
 mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
 // mongoose.connect('mongodb+srv://danigarcianegocio:Curitiba2024@cluster0.rmrtaxd.mongodb.net/animal?retryWrites=true&w=majority')
-//   .then(() => {
-//     console.log('Conexión a MongoDB exitosa');
-//     app.listen(port, () => {
-//       console.log(`Server running at http://localhost:${port}`);
-//     });
-//   })
-//   .catch(error => {
-//     console.error('Error al conectar a MongoDB:', error.message);
-//   });
+// .then(() => {
+// 	console.log('Conexión a MongoDB exitosa');
+// 	app.listen(port, () => {
+// 		console.log(`Server running at http://localhost:${port}`);
+// 	});
+// })
+// .catch(error => {
+// 	console.error('Error al conectar a MongoDB:', error.message);
+// });
 
-app.use(express.json())
+// app.use(express.json())
+app.use((err, req, res, next) => {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).send('Unauthorized');
+	} else {
+		next(err);
+	}
+});
 
-app.get('/animals', isAuthenticated, Animal.list)
+
+app.get('/animals', isAuthenticated, Animal.list,)
 app.post('/animals', isAuthenticated, Animal.create)
 app.put('/animals/:id', isAuthenticated, Animal.update)
 app.patch('/animals/:id', isAuthenticated, Animal.update)
@@ -39,6 +47,10 @@ app.get('/', (req, res) => {
 app.get('*', (req, res) => {
 	res.status(404).send('Esta página no existe :(')
 })
+app.get('*', (req, res) => {
+	res.sendFile(`${__dirname}/index.html`);
+});
+
 
 app.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}`);

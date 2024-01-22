@@ -21,7 +21,7 @@ const loadInitialTemplate = () => {
 const getAnimals = async () => {
 	const response = await fetch('/animals', {
 		headers: {
-			Authorization: localStorage.getItem('jwt')
+			'Authorization': localStorage.getItem('jwt')
 		}
 	})
 	const animals = await response.json()
@@ -56,7 +56,7 @@ const addFormListener = () => {
 			body: JSON.stringify(data),
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('jwt')
+
 			}
 		})
 		animalForm.reset()
@@ -64,8 +64,7 @@ const addFormListener = () => {
 	}
 }
 
-const checkLogin = () =>
-	localStorage.getItem('jwt')
+const checkLogin = () => { return localStorage.getItem('jwt') }
 
 const animalsPage = () => {
 	loadInitialTemplate()
@@ -94,6 +93,8 @@ const loadRegisterTemplate = () => {
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
+
+
 const addRegisterListener = () => {
 	const registerForm = document.getElementById("register-form");
 	registerForm.onsubmit = async (e) => {
@@ -106,21 +107,27 @@ const addRegisterListener = () => {
 
 		const response = await fetch('/register', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json'
+			},
+
 		});
+
 		const responseData = await response.text();
 		if (response.status >= 300) {
 			const errorNode = document.getElementById('error');
 			errorNode.innerHTML = responseData;
 		} else {
-			localStorage.setItem('jwt', 'Bearer ${resposeData}')
+			localStorage.setItem('jwt', 'Bearer ${responseData}')
 			animalsPage()
 			console.log(responseData);
 		}
 	};
 }
-const gotoLoginListener = () => { }
+const gotoLoginListener = () => {
+
+}
 
 const registerPage = () => {
 	console.log('pagina de registro');
@@ -164,6 +171,7 @@ const gotoRegisterListener = () => {
 		registerPage()
 	}
 }
+
 
 
 const addLoginListener = () => {

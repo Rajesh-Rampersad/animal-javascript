@@ -38,7 +38,7 @@
 //                 const isMatch = await bcrypt.compare(body.password, user.password);
 //                 if (isMatch) {
 //                     const signned = signToken(user._id);
-//                     res.status(200).send({ signned });
+//                     res.status(200).send({ signed });
 //                 } else {
 //                     res.status(401).send('Usuario y/o contraseña inválida');
 //                 }
@@ -73,21 +73,32 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { expressjwt: jwt } = require("express-jwt");
 const Jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt')
-// const { expressjwt: jwt } = require("express-jwt");
 const User = require('./user.model');
-const port = 3000;
 
-const validateJwt = expressJwt({ secret: "mi-secreto", algorithms: ['HS256'] });
+
+const validateJwt = jwt({ secret: "mi-secreto", algorithms: ['HS256'] });
+
+
 const signToken = _id => Jwt.sign({ _id }, "mi-secreto");
+
+// const findAndAssignUser = async (req, res, next) => {
+//     try {
+//         req.auth = await User.findById(req.user._id);
+//         next();
+//     } catch (e) {
+//         next(e);
+//     }
+// };
+
 const findAndAssignUser = async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.auth._id);
         if (!user) {
             return res.status(404).end();
         }
-        req.user = user
+        req.auth = user
         next()
     } catch (e) {
         next(e)
@@ -109,7 +120,7 @@ const Auth = {
             } else {
                 const isMatch = await bcrypt.compare(body.password, user.password);
                 if (isMatch) {
-                    const signned = signToken(user._id)
+                    const signed = signToken(user._id)
                     res.status(200).json({ token: signed })
                 }
             }
@@ -126,7 +137,7 @@ const Auth = {
             if (isUser) {
                 res.status(409).send('Usuario ya existe!')
             } else {
-                const salt = await bcrypt.genSalt();
+                const salt = await bcrypt.genSalt(10);
                 const hashed = await bcrypt.hash(body.password, salt);
                 const user = await User.create({ email: body.email, password: hashed, salt });
 
