@@ -98,34 +98,15 @@ const loadRegisterTemplate = () => {
 	body.innerHTML = template
 }
 
-const addRegisterListener = () => {
-	const registerForm = document.getElementById('register-form')
-	registerForm.onsubmit = async (e) => {
+
+
+const gotoLoginListener = () => {
+	const gotoLogin = document.getElementById('login')
+	gotoLogin.onclick = (e) => {
 		e.preventDefault()
-		const formData = new FormData(registerForm)
-		const data = Object.fromEntries(formData.entries())
-
-		const response = await fetch('/register', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json',
-
-			}
-		})
-		const responseData = await response.text()
-		if (response.status >= 300) {
-			const errorNode = document.getElementById('error')
-			errorNode.innerHTML = responseData
-		} else {
-			localStorage.setItem('jwt', `Bearer ${responseData}`)
-			animalsPage()
-
-		}
+		loginPage()
 	}
-
 }
-const gotoLoginListener = () => { }
 
 const registerPage = () => {
 	console.log('pagina de registro');
@@ -169,14 +150,14 @@ const gotoRegisterListener = () => {
 	}
 }
 
-const addLoginListener = () => {
-	const loginForm = document.getElementById('login-form')
-	loginForm.onsubmit = async (e) => {
+const authListener = action => () => {
+	const form = document.getElementById(`${action}-form`)
+	form.onsubmit = async (e) => {
 		e.preventDefault()
-		const formData = new FormData(loginForm)
+		const formData = new FormData(form)
 		const data = Object.fromEntries(formData.entries())
 
-		const response = await fetch('/login', {
+		const response = await fetch(`/${action}`, {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
@@ -190,9 +171,13 @@ const addLoginListener = () => {
 			errorNode.innerHTML = responseData
 		} else {
 			localStorage.setItem('jwt', `Bearer ${responseData}`)
+			animalsPage()
 		}
 	}
 }
+
+const addLoginListener = authListener('login')
+const addRegisterListener = authListener('register')
 
 window.onload = () => {
 	const isLoggedIn = checkLogin()
