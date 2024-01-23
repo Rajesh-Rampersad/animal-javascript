@@ -8,29 +8,16 @@ const Animal = {
 	create: async (req, res) => {
 		const animal = new Animals(req.body)
 		await animal.save()
-		res.status(201).send('Creado con exito!')
+		res.status(201).send('chanchito creado!')
 	},
 	update: async (req, res) => {
-		res.status(204).send('actualizado con exito')
+		res.status(204).send('actualizando chanchito')
 	},
 	destroy: async (req, res) => {
-		const { id } = req.params;
-
-		try {
-			const result = await animal.deleteOne({ _id: id });
-
-			if (result.deletedCount > 0) {
-				// Se eliminó al menos un documento, devuelve el código de estado 204
-				res.sendStatus(204);
-			} else {
-				// No se encontró el usuario, devuelve el código de estado 404
-				res.sendStatus(404);
-			}
-		} catch (error) {
-			console.error(error);
-			// Ocurrió un error en la operación, devuelve el código de estado 500
-			res.sendStatus(500);
-		}
+		const { id } = req.params
+		const animal = await Animals.findOne({ _id: id })
+    await animal.remove()
+		res.status(204).send('eliminando chanchito :(')
 	}
 }
 
